@@ -60,10 +60,12 @@ export const SnakeGame: React.FC = () => {
         highScore={highScore}
         isPaused={gameState.isPaused}
         onPause={handlePause}
+        level={gameState.level}
+        foodEatenThisLevel={gameState.foodEatenThisLevel}
       />
       
       <div className="flex-1 flex items-center justify-center p-4 relative">
-        <GameGrid snake={gameState.snake} food={gameState.food} />
+        <GameGrid snake={gameState.snake} food={gameState.food} blockers={gameState.blockers} />
         
         {currentScreen === 'gameOver' && (
           <GameOverScreen

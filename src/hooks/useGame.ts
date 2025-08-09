@@ -1,14 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { GameState, Direction, Position, INITIAL_SNAKE, GRID_WIDTH, GRID_HEIGHT, INITIAL_SPEED } from '@/types/game';
+import { GameState, Direction, Position, INITIAL_SNAKE, GRID_WIDTH, GRID_HEIGHT, INITIAL_SPEED, FOOD_PER_LEVEL, MAX_LEVELS, SPEED_DECREASE_PER_LEVEL, generateBlockersForLevel } from '@/types/game';
 
-const getRandomPosition = (snake: Position[]): Position => {
+const getRandomPosition = (snake: Position[], blockers: Position[] = []): Position => {
   let position: Position;
   do {
     position = {
       x: Math.floor(Math.random() * GRID_WIDTH),
       y: Math.floor(Math.random() * GRID_HEIGHT)
     };
-  } while (snake.some(segment => segment.x === position.x && segment.y === position.y));
+  } while (
+    snake.some(segment => segment.x === position.x && segment.y === position.y) ||
+    blockers.some(blocker => blocker.x === position.x && blocker.y === position.y)
+  );
   return position;
 };
 
@@ -30,13 +33,16 @@ const getDirectionFromSwipe = (startX: number, startY: number, endX: number, end
 export const useGame = () => {
   const [gameState, setGameState] = useState<GameState>({
     snake: [...INITIAL_SNAKE],
-    food: getRandomPosition(INITIAL_SNAKE),
+    food: getRandomPosition(INITIAL_SNAKE, []),
     direction: Direction.RIGHT,
     nextDirection: Direction.RIGHT,
     score: 0,
     isGameOver: false,
     isPaused: false,
-    speed: INITIAL_SPEED
+    speed: INITIAL_SPEED,
+    level: 1,
+    foodEatenThisLevel: 0,
+    blockers: generateBlockersForLevel(1)
   });
 
   const [highScore, setHighScore] = useState(() => {
@@ -60,7 +66,7 @@ export const useGame = () => {
     setGameState(prevState => {
       if (prevState.isGameOver || prevState.isPaused) return prevState;
 
-      const { snake, food, direction, nextDirection } = prevState;
+      const { snake, food, direction, nextDirection, blockers, level, foodEatenThisLevel } = prevState;
       
       // Update direction if it's valid
       const newDirection = isOppositeDirection(direction, nextDirection) ? direction : nextDirection;
@@ -93,14 +99,33 @@ export const useGame = () => {
         return { ...prevState, isGameOver: true };
       }
 
+      // Check blocker collision
+      if (blockers.some(blocker => blocker.x === newHead.x && blocker.y === newHead.y)) {
+        return { ...prevState, isGameOver: true };
+      }
+
       const newSnake = [newHead, ...snake];
       let newFood = food;
       let newScore = prevState.score;
+      let newLevel = level;
+      let newFoodEatenThisLevel = foodEatenThisLevel;
+      let newBlockers = blockers;
+      let newSpeed = prevState.speed;
 
       // Check food collision
       if (newHead.x === food.x && newHead.y === food.y) {
-        newFood = getRandomPosition(newSnake);
+        newFood = getRandomPosition(newSnake, blockers);
         newScore += 1;
+        newFoodEatenThisLevel += 1;
+        
+        // Check if level should advance
+        if (newFoodEatenThisLevel >= FOOD_PER_LEVEL && newLevel < MAX_LEVELS) {
+          newLevel += 1;
+          newFoodEatenThisLevel = 0;
+          newBlockers = generateBlockersForLevel(newLevel);
+          newSpeed = Math.max(INITIAL_SPEED - (newLevel - 1) * SPEED_DECREASE_PER_LEVEL, 80); // Min speed of 80ms
+          newFood = getRandomPosition(newSnake, newBlockers); // Regenerate food to avoid blocker conflicts
+        }
         
         // Trigger haptic feedback
         if (navigator.vibrate) {
@@ -115,22 +140,30 @@ export const useGame = () => {
         snake: newSnake,
         food: newFood,
         direction: newDirection,
-        score: newScore
+        score: newScore,
+        level: newLevel,
+        foodEatenThisLevel: newFoodEatenThisLevel,
+        blockers: newBlockers,
+        speed: newSpeed
       };
     });
   }, []);
 
   const startGame = useCallback(() => {
     const initialSnake = [...INITIAL_SNAKE];
+    const initialBlockers = generateBlockersForLevel(1);
     setGameState({
       snake: initialSnake,
-      food: getRandomPosition(initialSnake),
+      food: getRandomPosition(initialSnake, initialBlockers),
       direction: Direction.RIGHT,
       nextDirection: Direction.RIGHT,
       score: 0,
       isGameOver: false,
       isPaused: false,
-      speed: INITIAL_SPEED
+      speed: INITIAL_SPEED,
+      level: 1,
+      foodEatenThisLevel: 0,
+      blockers: initialBlockers
     });
   }, []);
 

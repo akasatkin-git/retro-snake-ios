@@ -179,6 +179,12 @@
     animation: pulse var(--pulse-duration) ease-in-out infinite;
   }
 
+  .blocker {
+    background: #ff4444 !important;
+    box-shadow: 0 0 4px #ff4444;
+    border: 1px solid #ff4444;
+  }
+
   /* Retro Button Styles */
   .retro-button {
     background: hsl(var(--primary));
