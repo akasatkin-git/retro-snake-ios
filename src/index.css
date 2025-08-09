@@ -161,18 +161,21 @@
   }
 
   .snake-head {
-    background: hsl(var(--snake-head));
-    box-shadow: 0 0 4px hsl(var(--snake-head) / 0.8);
+    background: #00ff41 !important;
+    box-shadow: 0 0 4px #00ff41;
+    border: 1px solid #00ff41;
   }
 
   .snake-body {
-    background: hsl(var(--snake-body));
-    box-shadow: 0 0 2px hsl(var(--snake-body) / 0.6);
+    background: #00cc33 !important;
+    box-shadow: 0 0 2px #00cc33;
+    border: 1px solid #00cc33;
   }
 
   .food {
-    background: hsl(var(--food));
-    box-shadow: 0 0 6px hsl(var(--food) / 0.9);
+    background: #ffff00 !important;
+    box-shadow: 0 0 6px #ffff00;
+    border: 1px solid #ffff00;
     animation: pulse var(--pulse-duration) ease-in-out infinite;
   }
 

@@ -10,6 +10,9 @@ interface GameGridProps {
 export const GameGrid: React.FC<GameGridProps> = ({ snake, food }) => {
   const cells = [];
 
+  // Add debugging
+  console.log('Rendering grid - snake:', snake, 'food:', food);
+
   for (let y = 0; y < GRID_HEIGHT; y++) {
     for (let x = 0; x < GRID_WIDTH; x++) {
       const isSnakeHead = snake[0]?.x === x && snake[0]?.y === y;
@@ -20,16 +23,25 @@ export const GameGrid: React.FC<GameGridProps> = ({ snake, food }) => {
       
       if (isSnakeHead) {
         className += ' snake-head';
+        console.log(`Snake head at ${x},${y}`);
       } else if (isSnakeBody) {
         className += ' snake-body';
+        console.log(`Snake body at ${x},${y}`);
       } else if (isFood) {
         className += ' food';
+        console.log(`Food at ${x},${y}`);
       }
 
       cells.push(
         <div
           key={`${x}-${y}`}
           className={className}
+          style={{
+            // Add inline styles as fallback to ensure visibility
+            backgroundColor: isSnakeHead ? '#00ff41' : 
+                           isSnakeBody ? '#00cc33' : 
+                           isFood ? '#ffff00' : '#001100'
+          }}
         />
       );
     }
