@@ -54,8 +54,11 @@ export const GameGrid: React.FC<GameGridProps> = ({ snake, food }) => {
         gridTemplateColumns: `repeat(${GRID_WIDTH}, 1fr)`,
         gridTemplateRows: `repeat(${GRID_HEIGHT}, 1fr)`,
         aspectRatio: `${GRID_WIDTH} / ${GRID_HEIGHT}`,
-        maxWidth: '100vw',
-        maxHeight: '70vh'
+        maxWidth: '95vw',
+        maxHeight: '85vh',
+        minHeight: '60vh',
+        width: '100%',
+        height: 'auto'
       }}
     >
       {cells}
