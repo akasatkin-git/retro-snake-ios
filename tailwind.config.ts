@@ -52,6 +52,13 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				snake: {
+					head: 'hsl(var(--snake-head))',
+					body: 'hsl(var(--snake-body))'
+				},
+				food: 'hsl(var(--food))',
+				'grid-line': 'hsl(var(--grid-line))',
+				'game-glow': 'hsl(var(--game-glow))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',

@@ -2,41 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Retro Snake Game Design System - Matrix/CRT Aesthetic */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Retro CRT Color Palette */
+    --background: 120 100% 3%;        /* Deep matrix black */
+    --foreground: 120 100% 50%;       /* Bright matrix green */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 120 100% 4%;              /* Slightly lighter black */
+    --card-foreground: 120 100% 50%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 120 100% 4%;
+    --popover-foreground: 120 100% 50%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 120 100% 25%;          /* Matrix green primary */
+    --primary-foreground: 120 100% 3%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 120 50% 8%;          /* Dark green secondary */
+    --secondary-foreground: 120 100% 50%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 120 30% 10%;             /* Muted dark green */
+    --muted-foreground: 120 50% 40%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 120 100% 30%;           /* Bright accent green */
+    --accent-foreground: 120 100% 3%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 100% 40%;        /* Red for game over */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 120 50% 15%;            /* Green borders */
+    --input: 120 50% 15%;
+    --ring: 120 100% 50%;
 
-    --radius: 0.5rem;
+    /* Game-specific colors */
+    --snake-head: 120 100% 50%;       /* Bright green head */
+    --snake-body: 120 80% 35%;        /* Slightly dimmer body */
+    --food: 60 100% 50%;              /* Yellow food */
+    --grid-line: 120 30% 12%;         /* Subtle grid lines */
+    --game-glow: 120 100% 50%;        /* CRT glow effect */
+
+    /* Retro animations */
+    --pulse-duration: 2s;
+    --glow-intensity: 0 0 10px;
+    --scanline-speed: 3s;
+
+    --radius: 0;
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +113,153 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-mono;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+  }
+}
+
+@layer components {
+  /* CRT Screen Effects */
+  .crt-screen {
+    position: relative;
+    background: hsl(var(--background));
+    border: 2px solid hsl(var(--border));
+    box-shadow: 
+      inset 0 0 20px hsl(var(--game-glow) / 0.1),
+      0 0 20px hsl(var(--game-glow) / 0.2);
+  }
+
+  .crt-screen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(var(--game-glow) / 0.05) 2px,
+      hsl(var(--game-glow) / 0.05) 4px
+    );
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Game Grid Styles */
+  .game-grid {
+    display: grid;
+    gap: 1px;
+    background: hsl(var(--grid-line));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .grid-cell {
+    background: hsl(var(--background));
+    aspect-ratio: 1;
+  }
+
+  .snake-head {
+    background: hsl(var(--snake-head));
+    box-shadow: 0 0 4px hsl(var(--snake-head) / 0.8);
+  }
+
+  .snake-body {
+    background: hsl(var(--snake-body));
+    box-shadow: 0 0 2px hsl(var(--snake-body) / 0.6);
+  }
+
+  .food {
+    background: hsl(var(--food));
+    box-shadow: 0 0 6px hsl(var(--food) / 0.9);
+    animation: pulse var(--pulse-duration) ease-in-out infinite;
+  }
+
+  /* Retro Button Styles */
+  .retro-button {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border: 2px solid hsl(var(--border));
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.3);
+  }
+
+  .retro-button:hover {
+    background: hsl(var(--accent));
+    box-shadow: 0 0 15px hsl(var(--accent) / 0.5);
+    transform: translateY(-1px);
+  }
+
+  .retro-button:active {
+    transform: translateY(0);
+    box-shadow: 0 0 8px hsl(var(--primary) / 0.4);
+  }
+
+  /* Score Display */
+  .score-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+    text-shadow: 0 0 8px hsl(var(--game-glow) / 0.6);
+    letter-spacing: 2px;
+  }
+
+  /* Game Over Overlay */
+  .game-over-overlay {
+    background: hsl(var(--background) / 0.95);
+    backdrop-filter: blur(4px);
+    border: 2px solid hsl(var(--destructive));
+    box-shadow: 
+      0 0 20px hsl(var(--destructive) / 0.3),
+      inset 0 0 20px hsl(var(--destructive) / 0.1);
+  }
+
+  /* Retro Glow Text */
+  .glow-text {
+    text-shadow: 
+      0 0 5px hsl(var(--game-glow)),
+      0 0 10px hsl(var(--game-glow)),
+      0 0 15px hsl(var(--game-glow));
+  }
+}
+
+@layer utilities {
+  /* Animations */
+  @keyframes pulse {
+    0%, 100% { 
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% { 
+      opacity: 0.7;
+      transform: scale(0.95);
+    }
+  }
+
+  @keyframes glow {
+    0%, 100% { 
+      box-shadow: 0 0 5px hsl(var(--game-glow) / 0.5);
+    }
+    50% { 
+      box-shadow: 0 0 20px hsl(var(--game-glow) / 0.8);
+    }
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.98; }
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  .animate-flicker {
+    animation: flicker 0.15s ease-in-out infinite;
   }
 }
