@@ -86,10 +86,6 @@ export const SnakeGame: React.FC = () => {
         )}
       </div>
       
-      {/* Touch control instructions */}
-      <div className="text-center p-4 text-xs opacity-50">
-        Swipe to control • Space to pause • Arrow keys supported
-      </div>
     </div>
   );
 };

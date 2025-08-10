@@ -39,7 +39,7 @@ export const INITIAL_SNAKE: Position[] = [
 ];
 
 export const GRID_WIDTH = 20;
-export const GRID_HEIGHT = 30;
+export const GRID_HEIGHT = 23;
 export const INITIAL_SPEED = 200; // milliseconds between moves
 export const FOOD_PER_LEVEL = 10;
 export const MAX_LEVELS = 8;
