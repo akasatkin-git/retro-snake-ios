@@ -58,12 +58,16 @@ export const SnakeGame: React.FC = () => {
       className="h-full w-full flex flex-col bg-background relative overflow-hidden"
       style={{ 
         height: '100dvh',
-        touchAction: 'none',
+        touchAction: 'pan-x pan-y',
         overscrollBehavior: 'none'
       }}
-      onTouchMove={(e) => e.preventDefault()}
-      onTouchStart={(e) => e.preventDefault()}
-      onTouchEnd={(e) => e.preventDefault()}
+      onTouchMove={(e) => {
+        // Only prevent default if not clicking on buttons or UI elements
+        const target = e.target as Element;
+        if (!target.closest('button') && !target.closest('[role="button"]')) {
+          e.preventDefault();
+        }
+      }}
     >
       <GameHUD 
         score={gameState.score}
