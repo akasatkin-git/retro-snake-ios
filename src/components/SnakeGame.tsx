@@ -54,7 +54,17 @@ export const SnakeGame: React.FC = () => {
   const isNewHighScore = gameState.score > highScore;
 
   return (
-    <div className="h-screen flex flex-col bg-background relative overflow-hidden touch-none">
+    <div 
+      className="h-full w-full flex flex-col bg-background relative overflow-hidden"
+      style={{ 
+        height: '100dvh',
+        touchAction: 'none',
+        overscrollBehavior: 'none'
+      }}
+      onTouchMove={(e) => e.preventDefault()}
+      onTouchStart={(e) => e.preventDefault()}
+      onTouchEnd={(e) => e.preventDefault()}
+    >
       <GameHUD 
         score={gameState.score}
         highScore={highScore}
@@ -85,7 +95,6 @@ export const SnakeGame: React.FC = () => {
           />
         )}
       </div>
-      
     </div>
   );
 };
