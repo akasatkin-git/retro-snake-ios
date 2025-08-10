@@ -54,7 +54,7 @@ export const SnakeGame: React.FC = () => {
   const isNewHighScore = gameState.score > highScore;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background relative">
+    <div className="h-screen flex flex-col bg-background relative overflow-hidden touch-none">
       <GameHUD 
         score={gameState.score}
         highScore={highScore}
