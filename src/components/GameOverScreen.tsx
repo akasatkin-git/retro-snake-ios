@@ -51,9 +51,7 @@ export const GameOverScreen: React.FC<GameOverScreenProps> = ({
           
           <Button 
             onClick={onHome}
-            variant="outline"
             className="retro-button flex items-center gap-2"
-            data-variant="outline"
           >
             <Home className="w-4 h-4" />
             HOME
